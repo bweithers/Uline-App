@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html>
+{% load static %}
 <head>
 <title>This is a working example for Uline</title>
 </head>
 
 
 <body onload="setup()">
-<script src="testScript.js"></script>
+
+<script src="{% static "dt/testScript.js" %}"></script>
 <h2>This is proof of concept for an animated tracking app</h2>
 
 
