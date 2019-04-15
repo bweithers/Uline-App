@@ -7,6 +7,7 @@ var myBackground = {
         this.canvas.height = 350;
         this.context = this.canvas.getContext("2d");
         this.interval = setInterval(updateBackground, 20);
+        //this.canvas.drawImage("campusmap.png");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
     },
     clear : function(){

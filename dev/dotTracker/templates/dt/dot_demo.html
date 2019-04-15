@@ -1,0 +1,104 @@
+<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+
+<p id="speed"></p>
+<img src="map.png" id="map">
+<canvas id="myCanvas">
+</canvas>
+
+
+<p id="mouse">(0, 1)</p>
+
+<script>
+
+var canvas = document.getElementById("myCanvas")
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+var ctx = canvas.getContext("2d")
+
+var map;
+
+var points = [
+    [374 * 2, 7 * 2], [464 * 2, 15* 2], [500 * 2, 100 * 2], [600* 2, 160 * 2], [625* 2, 530* 2]
+]
+var p = 0;
+
+var pointX = points[0][0];
+var pointY = points[0][1];
+
+var vX = undefined;
+var vY = undefined;
+
+$(document).ready(function() {
+    map = document.getElementById("map")
+    ctx.scale(0.5, 0.5)
+
+    setInterval(function() {
+    update();
+    clear()
+    paint()
+    })
+})
+
+function update() {
+        vX = points[(p + 1) % points.length][0] - points[p][0]
+        vY = points[(p + 1) % points.length][1] - points[p][1]
+
+        vX /= 100;
+        vY /=  100;
+    
+
+    $("#speed").text("(" + pointX +"," + pointY + ")")
+
+
+    pointX += vX;
+    pointY += vY;
+
+    var deltaX = Math.abs(points[(p + 1) % points.length][0] - pointX);
+    var deltaY = Math.abs(points[(p + 1) % points.length][1] - pointY);
+
+    if(deltaX < 20 && deltaY < 20) p++;
+    
+}
+
+function clear() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function paint() {
+    ctx.drawImage(map, 0, 0);
+
+    ctx.fillStyle = "red";
+    ctx.beginPath();
+    ctx.arc(pointX, pointY, 10, 0, 2 * Math.PI);
+    ctx.closePath()
+    ctx.fill()
+}
+
+setInterval(function() {
+    $(document).mousemove(function(e) {
+        $("#mouse").css({
+            left: e.clientX,
+            top: e.clientY
+        }).text("(" + e.clientX + "," + e.clientY+")")
+    })
+})
+
+
+</script>
+<style>
+html, body { margin: 0 }
+#map { 
+    display: none;
+
+    width: 50%;
+    height: 50%;
+}
+
+#mouse {
+    position: absolute;
+    color: magenta;
+    font-weight: bold;
+}
+
+</style>
+
