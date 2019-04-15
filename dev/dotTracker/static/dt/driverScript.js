@@ -108,7 +108,6 @@ function showMap(){
 function updateBackground(){
     myBackground.clear();
     getLocation();
-    redBlock.loc = 0;
     redBlock.update();
 }
 
