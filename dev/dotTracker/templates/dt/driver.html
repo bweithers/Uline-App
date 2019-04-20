@@ -5,7 +5,7 @@
 <title>
 Driver View
 </title>
-<h1>This is a placeholder page for the driver view</h1>
+<h1 id = "header">This is a placeholder page for the driver view</h1>
 </head>
 
 <img hidden = true id = "map" src="{% static "dt/campusmap_crop_resize.jpg" %}"></img>
@@ -13,10 +13,9 @@ Driver View
 
 <body onload="setup()">
 <script src="{% static "dt/driverScript.js" %}"></script>
-<p>These are some functional buttons that should help you.</p>
+<p id="label">These are some functional buttons that should help you.</p>
 <button type="button" onclick="hideMap()">Driver break button.</button>
 <button type="button" onclick="showMap()">Driver return button.</button>
-<p id = "label"></p>
 </body>
 
 </html>

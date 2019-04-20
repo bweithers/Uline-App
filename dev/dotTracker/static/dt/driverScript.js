@@ -1,6 +1,20 @@
 var redBlock, startpt, endpt;
 var refr_rate = 10;
 
+var loc0 = [42.5213, -87.959526]
+var loc1 = [42.520955, -87.954529]
+var loc2 = [42.518050, -87.952377]
+var loc3 = [42.514992, -87.954459]
+
+var lon01div = -87.9570275;
+var lat12div = 42.5195025;
+var lat23div = 42.516521;
+
+var upperbound = 42.53;
+var bottombound = 42.45;
+var rightbound = -87.975;
+var leftbound = -87.93;
+
 console.log("Startup.");
 
 var myBackground = {
@@ -23,7 +37,6 @@ var myBackground = {
 function setup(){
     myBackground.start();
     ctx = myBackground.context;
-    ctx.strokeRect(60,60,400,200);
     redBlock = new component(15,15,"red", 0);
 }
 
@@ -38,14 +51,16 @@ function component(width, height, color, loc){
         var lat = position.coords.latitude;
         var lon = position.coords.longitude;
          
-        /* This block of code will map the GeoLocations to the block.loc var
-        if ((lon >= xzero && lon <= xtwo)) loc = 1;
-        if ((lon >= xtwo && lon <= xthree) && (lat >= yone)) loc = 1;
-        if ((lon >= xone && lon <= x) && (lat >= yone)) loc = 1; 
-        if ((lon >= xone && lon <= xtwo) && (lat >= yone)) loc = 1;
-        */
-
-        console.log(lat, lon);
+        // This block of code will map the GeoLocations to the block.loc var 
+        if (lon >= lon01div && lat >= lat12div) redBlock.loc = 0;
+        if (lon >= lon01div && lat >= lat12div) redBlock.loc = 1; 
+        if (lat <= lat12div && lat >= lat23div) redBlock.loc = 2;
+        if (lat <= lat23div)                    redBlock.loc = 3;
+         
+        // If the GeoLocation is not any reasonable location by Uline, hide the block
+        if (lat <= bottombound || lat >= upperbound || lon >= leftbound || lon <= rightbound) redBlock.loc = -1;
+        
+        console.log("Given: ",lat, lon,"Loc: ",redBlock.loc);
         return;
     },
     
@@ -53,24 +68,17 @@ function component(width, height, color, loc){
         this.clear();
         this.x = NaN;
         this.y = NaN;
-        this.loc = -1
+        this.loc = -1;
+        return;
     },
     
-    this.reset = function(){
-        if(this.state == 5){
-            this.x = 30;
-            this.y = 45;
-            this.state = 0;
-            return 1;
-        }
-        return -1; 
-    },
-
+    
     this.clear = function(){
         ctx = myBackground.context;
         ctx.clearRect(this.x, this.y, this.height, this.width);
         return; 
     },
+
     this.update = function(){
         this.clear();
         switch(this.loc){
@@ -90,6 +98,15 @@ function component(width, height, color, loc){
                 this.x = 725;
                 this.y = 985;
                 break;
+            case -1:
+                this.x = NaN;
+                this.y = NaN;
+                break;
+            default:
+                this.x = NaN;
+                this.y = NaN;
+                console.log("Unexpected value in redBlock.loc");
+                break;
         }
         ctx = myBackground.context;
         ctx.fillStyle = color;
@@ -97,14 +114,19 @@ function component(width, height, color, loc){
     }
    
 }
+
 function hideMap(){
     document.getElementById("label").innerHTML = "The Driver is away.";
+    document.getElementById("header").innerHTML = "AWAY."; 
     redBlock.hide();
 }
+
 function showMap(){
     document.getElementById("label").innerHTML = "This the Driver page.";
+    document.getElementById("header").innerHTML = "DRIVING.";
     redBlock.update();
 }
+
 function updateBackground(){
     myBackground.clear();
     getLocation();
